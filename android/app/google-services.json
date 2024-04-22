@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "724681086236",
+    "project_id": "ruet-cse-management",
+    "storage_bucket": "ruet-cse-management.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724681086236:android:0b9c01595fdd6be26816d9",
+        "android_client_info": {
+          "package_name": "com.sangroup.ruet_cse_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv7sWkQfPXf_AT0BaQj7XGp_unOjJgzj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
