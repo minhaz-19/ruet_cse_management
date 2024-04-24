@@ -64,9 +64,9 @@ class subject_teacher_and_room_no extends StatefulWidget {
 
 class _subject_teacher_and_room_noState
     extends State<subject_teacher_and_room_no> {
-  String course_name = 'subject';
-  String course_teacher = 'teacher';
-  String room_no = 'room';
+  String course_name = '';
+  String course_teacher = '';
+  String room_no = '';
   var preference = 3;
 
   TextEditingController course_controller = TextEditingController();
@@ -267,23 +267,40 @@ class _subject_teacher_and_room_noState
                               if (room_controller.text == '') {
                                 room_controller.text = room_no;
                               }
-                              await firebaseFirestore
-                                  .collection('cse')
-                                  .doc('routine')
+                              // check if the data already exists
+                              final docRef = firebaseFirestore
+                                  .collection("cse")
+                                  .doc("routine")
                                   .collection(widget.year)
                                   .doc(widget.day)
                                   .collection(widget.section)
-                                  .doc('period ${widget.period}')
-                                  .update({
-                                'course': course_controller.text,
-                                'teacher': teacher_controller.text,
-                                'room': room_controller.text,
-                              }).then((value) => Fluttertoast.showToast(
-                                              msg:
-                                                  "Routine Updated Successfully")
-                                          .catchError((e) {
-                                        Fluttertoast.showToast(msg: e!.massage);
-                                      }));
+                                  .doc('period ${widget.period}');
+
+
+                              await docRef.get().then((doc) {
+                                if (doc.exists) {
+                                  docRef.update({
+                                    'course': course_controller.text,
+                                    'teacher': teacher_controller.text,
+                                    'room': room_controller.text,
+                                  }).then((value) => Fluttertoast.showToast(
+                                          msg: "Routine Updated Successfully")
+                                      .catchError((e) {
+                                    Fluttertoast.showToast(msg: e!.massage);
+                                  }));
+                                } else {
+                                  docRef.set({
+                                    'course': course_controller.text,
+                                    'teacher': teacher_controller.text,
+                                    'room': room_controller.text,
+                                    'preference': 3,
+                                  }).then((value) => Fluttertoast.showToast(
+                                          msg: "Routine Updated Successfully")
+                                      .catchError((e) {
+                                    Fluttertoast.showToast(msg: e!.massage);
+                                  }));
+                                }
+                              });
                             })
                       ],
                     );

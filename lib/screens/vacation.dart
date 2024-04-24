@@ -232,7 +232,7 @@ class _declare_vacationState extends State<declare_vacation> {
                   )),
               const SizedBox(height: 20),
               TextButton(
-                onPressed: () {
+                onPressed: ()async {
                   setState(() {
                     vacation_cause = vacation_controller.text;
                   });
@@ -253,7 +253,14 @@ class _declare_vacationState extends State<declare_vacation> {
                           Fluttertoast.showToast(
                               msg: 'Please select an ending date');
                         } else {
-                          FirebaseFirestore.instance
+                          // check if data is already exist or not
+                          await FirebaseFirestore.instance
+                              .collection('cse')
+                              .doc('routine')
+                              .get()
+                              .then((DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists) {
+                               FirebaseFirestore.instance
                               .collection('cse')
                               .doc('routine')
                               .update({
@@ -269,6 +276,27 @@ class _declare_vacationState extends State<declare_vacation> {
                                       .catchError((e) {
                                     Fluttertoast.showToast(msg: e!.massage);
                                   }));
+                            }else{
+                                FirebaseFirestore.instance
+                              .collection('cse')
+                              .doc('routine')
+                              .set({
+                            '${dropdown_value!.toLowerCase()} cause':
+                                vacation_cause,
+                            '${dropdown_value!.toLowerCase()} start':
+                                starting_date,
+                            '${dropdown_value!.toLowerCase()} end':
+                                ending_date.add(const Duration(days: 1)),
+                          }).then((value) => Fluttertoast.showToast(
+                                          msg:
+                                              "Schedule of off day added successfully")
+                                      .catchError((e) {
+                                    Fluttertoast.showToast(msg: e!.massage);
+                                  }));
+                            }
+                          });
+
+                        
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
